@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Primary SEO Meta Tags -->
-    <title>Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker</title>
-    <meta name="description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+    <!-- Primary SEO Meta Tags - UPDATED -->
+    <title>Coast FI Roadmap Calculator | Inflation-Adjusted Financial Freedom</title>
+    <meta name="description" content="Calculate your exact Coast FI principal in today's dollars. Generate a step-by-step, inflation-adjusted roadmap showing your sprint and coast phases to financial independence.">
     <link rel="canonical" href="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]"> 
 
-    <!-- Open Graph / Social Media Tags (Used by Facebook, LinkedIn, etc.) -->
+    <!-- Open Graph / Social Media Tags (Used by Facebook, LinkedIn, etc.) - UPDATED -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]">
-    <meta property="og:title" content="Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker">
-    <meta property="og:description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+    <meta property="og:title" content="Coast FI Roadmap Calculator | Inflation-Adjusted Financial Freedom">
+    <meta property="og:description" content="Calculate your exact Coast FI principal in today's dollars. Generate a step-by-step, inflation-adjusted roadmap showing your sprint and coast phases to financial independence.">
 
-    <!-- Twitter Card Tags (Used by X/Twitter) -->
+    <!-- Twitter Card Tags (Used by X/Twitter) - UPDATED -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]">
-    <meta name="twitter:title" content="Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker">
-    <meta name="twitter:description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+    <meta name="twitter:title" content="Coast FI Roadmap Calculator | Inflation-Adjusted Financial Freedom">
+    <meta name="twitter:description" content="Calculate your exact Coast FI principal in today's dollars. Generate a step-by-step, inflation-adjusted roadmap showing your sprint and coast phases to financial independence.">
 
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -77,7 +77,7 @@
         }
     </script>
 </head>
-<body class="p-4 sm:p-8 min-h-screen flex items-start justify-center">
+<body class="p-4 sm:p-8 min-h-screen flex flex-col items-center justify-start">
 
     <div id="app" class="w-full max-w-4xl">
         <div class="container-card bg-white p-6 sm:p-8 rounded-xl">
@@ -85,10 +85,12 @@
             <p class="text-sm text-gray-500 mb-6 text-center" id="valueContext">All projected values are shown in **today's purchasing power (Real)**.</p>
 
             <form id="coastFiForm" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                
+                <!-- ROW 1: Ages, Balances, Rates -->
+                
                 <!-- Current Age Input -->
                 <div>
                     <label for="currentAge" class="block text-sm font-medium text-gray-700">Current Age</label>
-                    <!-- MINIMUM AGE IS 1 -->
                     <input type="number" id="currentAge" value="30" min="1" max="90" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
 
@@ -98,16 +100,22 @@
                     <input type="number" id="retirementAge" value="65" min="40" max="90" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
 
-                <!-- Current Portfolio Value -->
-                <div class="col-span-2 sm:col-span-1">
-                    <label for="currentBalance" class="block text-sm font-medium text-gray-700">Current Portfolio ($)</label>
-                    <input type="number" id="currentBalance" value="100000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                <!-- Traditional Portfolio Balance -->
+                <div>
+                    <label for="traditionalBalance" class="block text-sm font-medium text-gray-700">Traditional Balance ($)</label>
+                    <input type="number" id="traditionalBalance" value="70000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Roth Portfolio Balance -->
+                <div>
+                    <label for="rothBalance" class="block text-sm font-medium text-gray-700">Roth Balance ($)</label>
+                    <input type="number" id="rothBalance" value="30000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
 
                 <!-- Expected Annual Return (Nominal) -->
                 <div>
                     <label for="annualReturn" class="block text-sm font-medium text-gray-700">Nominal Return (%)</label>
-                    <input type="number" id="annualReturn" value="7" step="0.1" min="1" max="15" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                    <input type="number" id="annualReturn" value="10" step="0.1" min="1" max="15" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
 
                 <!-- Annual Inflation Rate -->
@@ -116,16 +124,26 @@
                     <input type="number" id="inflationRate" value="3" step="0.1" min="0" max="10" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
 
+                <!-- ROW 2: Income and Contributions -->
+                
                 <!-- Desired Annual Retirement Income -->
-                <div class="col-span-2 sm:col-span-1">
-                    <label for="annualIncome" class="block text-sm font-medium text-gray-700">Desired Income ($)</label>
+                <div class="col-span-2 sm:col-span-2 md:col-span-2">
+                    <label for="annualIncome" class="block text-sm font-medium text-gray-700">Desired Annual Retirement Income ($)</label>
                     <input type="number" id="annualIncome" value="40000" min="1000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                 </div>
-
-                <!-- Annual Contributions Input -->
-                <div class="md:col-span-6">
-                    <label for="annualContributions" class="block text-sm font-medium text-gray-700">Annual Contributions ($) (Maintained in Real Terms)</label>
-                    <input type="number" id="annualContributions" value="12000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                
+                <!-- Traditional Annual Contribution (Label Updated) -->
+                <div class="col-span-2 sm:col-span-2 md:col-span-2">
+                    <label for="traditionalContributions" class="block text-sm font-medium text-gray-700">Traditional Annual Contr. ($)</label>
+                    <input type="number" id="traditionalContributions" value="9000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+                
+                <!-- Roth Annual Contribution (Label Updated) -->
+                <div class="col-span-2 sm:col-span-2 md:col-span-2">
+                    <label for="rothContributions" class="block text-sm font-medium text-gray-700">Roth Annual Contr. ($)</label>
+                    <input type="number" id="rothContributions" value="3000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                    <!-- IRS Limit Reminder -->
+                    <p class="mt-1 text-xs text-red-500/80">Remember annual contributions must comply with IRS limits.</p>
                 </div>
             </form>
 
@@ -143,9 +161,12 @@
 
                 <h2 class="text-xl font-semibold text-secondary mb-3 text-center">Key Milestones</h2>
                 <div class="grid grid-cols-2 gap-y-2 text-sm text-gray-600">
-                    <p>FI Target ($F$, 25x Income): <span id="targetFI" class="font-bold text-secondary">$0</span></p>
-                    <p>Rate of Return: <span id="realRate" class="font-bold text-secondary">0%</span></p>
-                    <p>Years until Retirement ($n$): <span id="yearsToRetirement" class="font-bold text-secondary">0</span> years</p>
+                    <!-- UPDATED: Removed ($F$, 25x Income) -->
+                    <p>FI Target: <span id="targetFI" class="font-bold text-secondary">$0</span></p>
+                    <p id="rateDisplay">Real Rate of Return: <span id="realRate" class="font-bold text-secondary">0%</span></p>
+                    
+                    <!-- UPDATED: Removed ($n$) -->
+                    <p>Years until Retirement: <span id="yearsToRetirement" class="font-bold text-secondary">0</span></p>
                     
                     <!-- Coast Principal required today (P_coast calculated for the current age) -->
                     <p class="text-base font-semibold text-accent-blue mt-3 col-span-2">Coast Principal Required TODAY: <span id="requiredCoastPrincipalEl" class="font-extrabold">$0</span></p>
@@ -154,13 +175,23 @@
                     <p class="text-base font-semibold text-primary">Years to Reach Coast FI: <span id="yearsToCoastEl" class="font-extrabold text-secondary">N/A</span></p>
 
                     <!-- Value at Coast Date -->
-                    <p class="text-sm">Value when Coast FI is Reached: <span id="valueAtCoast" class="font-bold text-secondary">$0</span></p>
+                    <p class="text-sm">Required Value at Coast Date: <span id="valueAtCoast" class="font-bold text-secondary">$0</span></p>
                     
                     <!-- Total Contributions at Coast -->
                     <p class="text-sm border-t border-gray-200 pt-2 mt-2 col-span-2">Total Contributions at Coast Date: <span id="totalContributionsEl" class="font-bold text-primary">$0</span></p>
 
-                    <!-- Final Value at Retirement -->
-                    <p class="text-base font-semibold text-secondary col-span-2">Projected Final Value at Retirement: <span id="projectedFinalValue" class="font-extrabold">$0</span></p>
+                    <!-- NEW: Coast Balances -->
+                    <p class="text-sm border-t border-gray-200 pt-2 mt-2 col-span-2 font-bold text-gray-700">Account Balances at Coast FI Age (<span id="coastAgeDisplay">N/A</span>)</p>
+                    <p class="text-sm">Traditional Coast Bal.: <span id="traditionalCoastBalance" class="font-bold text-secondary">$0</span></p>
+                    <p class="text-sm">Roth Coast Bal.: <span id="rothCoastBalance" class="font-bold text-secondary">$0</span></p>
+
+                    <!-- NEW: Retirement Balances -->
+                    <p class="text-sm border-t border-gray-200 pt-2 mt-2 col-span-2 font-bold text-gray-700">Projected Account Balances at Retirement (Age <span id="retirementAgeDisplay">65</span>)</p>
+                    <p class="text-sm">Traditional Final Bal.: <span id="traditionalFinalBalance" class="font-bold text-secondary">$0</span></p>
+                    <p class="text-sm">Roth Final Bal.: <span id="rothFinalBalance" class="font-bold text-secondary">$0</span></p>
+
+                    <!-- Final Value at Retirement (Summary) -->
+                    <p class="text-base font-semibold text-secondary col-span-2 border-t border-gray-200 pt-2 mt-2">Projected Final Value (Total): <span id="projectedFinalValue" class="font-extrabold">$0</span></p>
                 </div>
 
                 <div id="verdict" class="mt-4 p-4 rounded-lg text-white font-bold text-lg text-center transition-all duration-300">
@@ -190,11 +221,53 @@
                 <!-- Dynamic projection table will be inserted here -->
             </div>
 
+            <!-- FIX: Added visibility on failure -->
             <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm" role="alert">
-                Please ensure all fields are filled with valid numbers.
+                Please ensure all fields are filled with valid numbers (no blank inputs), and that your Retirement Age is greater than or equal to your Current Age.
+            </div>
+
+            <!-- NEW: Explanation Section -->
+            <div id="coastFiExplanation" class="mt-12 p-6 bg-white border border-gray-200 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-secondary mb-4 text-center border-b pb-2">Understanding Coast Financial Independence (Coast FI)</h2>
+                
+                <p class="text-gray-700 mb-4">
+                    **Coast FI** is a powerful financial milestone where your current investment portfolio is large enough that, without adding any more money, it will naturally grow through compounding to reach your full Financial Independence (FI) number by your chosen traditional retirement age. Essentially, you've finished the intense saving "sprint" and can now "coast" to the finish line.
+                </p>
+
+                <h3 class="text-xl font-semibold text-primary mb-3">The Core Benefits of Reaching Coast FI:</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl font-bold mr-3">&#10003;</span>
+                        <div>
+                            <span class="font-semibold">Career Flexibility:</span> This is the biggest advantage. You are no longer financially obligated to maintain a high-stress or high-paying job. You can pursue part-time work, change careers to a passion project, or take a significant pay cut knowing your retirement is secured.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl font-bold mr-3">&#10003;</span>
+                        <div>
+                            <span class="font-semibold">Reduced Stress & Burnout:</span> The immense pressure to save is gone. You only need to earn enough to cover your current living expenses, allowing you to downshift and focus on your quality of life today.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl font-bold mr-3">&#10003;</span>
+                        <div>
+                            <span class="font-semibold">Maximize Compounding:</span> By achieving the required principal early, you maximize the time your money spends growing tax-advantaged (like in your 401k/IRA), letting exponential growth do the heavy lifting for the final push.
+                        </div>
+                    </li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-500 italic">
+                    Note: Your **Coast FI Principal Required TODAY** is dynamic; it **decreases** every year as you get older, because your money has fewer years left to compound passively until retirement. (Therefore, the required number you need *to hit* gets harder to reach the longer you wait!)
+                </p>
             </div>
         </div>
     </div>
+    
+    <!-- NEW DISCLAIMER SECTION -->
+    <div class="w-full max-w-4xl mt-6 p-4 text-center text-xs text-gray-500 rounded-lg bg-white/50 border border-gray-100">
+        <p class="font-bold mb-1">Disclaimer</p>
+        <p>These calculations are based entirely on user-provided inputs (e.g., estimated returns, inflation rates) and are for **visualization and planning purposes only**. This roadmap does not constitute financial advice, and actual investment results are not guaranteed. Past performance is not indicative of future results.</p>
+    </div>
+    <!-- END NEW DISCLAIMER SECTION -->
 
     <script>
         // --- DOM Elements ---
@@ -210,30 +283,44 @@
         const errorEl = document.getElementById('errorMessage');
         const projectionContainer = document.getElementById('projectionTableContainer');
         const realRateEl = document.getElementById('realRate');
+        const rateDisplayEl = document.getElementById('rateDisplay'); 
         const realModeBtn = document.getElementById('realModeBtn');
         const nominalModeBtn = document.getElementById('nominalModeBtn');
         const valueContextEl = document.getElementById('valueContext');
         const suggestionsContainer = document.getElementById('contributionSuggestions');
         const suggestion1El = document.getElementById('suggestion1');
         const suggestion2El = document.getElementById('suggestion2');
+        const coastAgeDisplayEl = document.getElementById('coastAgeDisplay');
+        const traditionalCoastBalanceEl = document.getElementById('traditionalCoastBalance');
+        const rothCoastBalanceEl = document.getElementById('rothCoastBalance');
+        const traditionalFinalBalanceEl = document.getElementById('traditionalFinalBalance');
+        const rothFinalBalanceEl = document.getElementById('rothFinalBalance');
+        const retirementAgeDisplayEl = document.getElementById('retirementAgeDisplay');
 
         // --- Global State ---
         let projectionData = [];
         let displayMode = 'real'; // 'real' or 'nominal'
         let fiTargetReal = 0;
         let requiredCoastPrincipalTodayReal = 0;
-        let finalCoastValueReal = 0;
+        let finalCoastValueReal = 0; // The actual required Coast FI number at the time of coasting
         let totalContributionsAtCoastRealGlobal = 0; 
+        let totalContributionsNominalGlobal = 0; 
         let projectedFinalValueReal = 0;
         let yearsToCoastGlobal = 'N/A';
-        let yearsToCoastNumberGlobal = Infinity; // Store the number for calculations
+        let yearsToCoastNumberGlobal = Infinity;
         let coastAgeGlobal = 0;
         let retirementAgeGlobal = 0;
         let ageGlobal = 0;
         let isCoastReachedGlobal = false;
         let inflationRateGlobal = 0;
-        let initialBalanceGlobal = 0;
+        let initialBalanceGlobal = 0; 
         let realRateGlobal = 0;
+        
+        // Balances for specific accounts at milestones
+        let traditionalCoastBalanceRealGlobal = 0;
+        let rothCoastBalanceRealGlobal = 0;
+        let traditionalFinalBalanceRealGlobal = 0;
+        let rothFinalBalanceRealGlobal = 0;
 
         /**
          * Formats a number into a currency string (e.g., $1,234,567)
@@ -241,6 +328,7 @@
          * @returns {string}
          */
         function formatCurrency(amount) {
+            if (typeof amount !== 'number' || isNaN(amount)) return 'N/A';
             return new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
@@ -259,7 +347,7 @@
          */
         function calculateRequiredPrincipal(fiTarget, realRate, remainingYears) {
              if (remainingYears <= 0) return fiTarget;
-             // Use Math.max to prevent negative remaining years causing issues if age > retirementAge
+             // Ensure we don't calculate future value using negative years
              const years = Math.max(0, remainingYears);
              return fiTarget / Math.pow(1 + realRate, years);
         }
@@ -269,34 +357,35 @@
          * Nominal = Real * (1 + inflation_rate)^years
          * @param {number} realAmount
          * @param {number} years
+         * @param {number} inflationRate
          * @returns {number} The nominal amount.
          */
         function convertToNominal(realAmount, years, inflationRate) {
+            // If years is 0, factor is 1, returns realAmount.
+            if (years <= 0) return realAmount; 
             return realAmount * Math.pow(1 + inflationRate, years);
         }
 
         /**
-         * Simulates the sprint phase to find the years required to reach Coast FI.
-         * @param {number} initialBalance - Starting balance (Real).
+         * Simulates the sprint phase to find the years required to reach Coast FI. (Used for suggestions)
+         * @param {number} initialBalance - Starting balance (Total Real).
          * @param {number} initialAge - Starting age.
          * @param {number} retirementAge - Target retirement age.
          * @param {number} realRate - Real rate of return (decimal).
          * @param {number} fiTargetReal - FI Target (Real).
-         * @param {number} annualContributionReal - Annual contribution during sprint (Real).
+         * @param {number} annualContributionReal - Annual contribution during sprint (Total Real).
          * @returns {{years: number, balance: number, contributions: number}} years to reach coast, final coast balance, and total real contributions.
          */
         function simulateToCoast(initialBalance, initialAge, retirementAge, realRate, fiTargetReal, annualContributionReal) {
             let currentBalanceReal = initialBalance;
             let currentAge = initialAge;
             let year = 0;
-            let totalContributions = 0; // Initialize total contributions
+            let totalContributions = 0; 
             
-            // Calculate the required principal today for immediate check
             const yearsToRetirementToday = retirementAge - initialAge;
             const requiredPrincipalToday = calculateRequiredPrincipal(fiTargetReal, realRate, yearsToRetirementToday);
             
             if (initialBalance >= requiredPrincipalToday) {
-                // If already coasted, 0 years, 0 contributions
                 return { years: 0, balance: initialBalance, contributions: 0 };
             }
 
@@ -308,11 +397,10 @@
                 // Balance grows
                 const balanceAfterGrowthReal = currentBalanceReal * (1 + realRate);
                 const endBalanceReal = balanceAfterGrowthReal + annualContributionReal;
-                totalContributions += annualContributionReal; // Accumulate contributions for this year
+                totalContributions += annualContributionReal; 
 
                 if (endBalanceReal >= requiredCoastPrincipalThisYearReal) {
-                    // Coast reached! 
-                    // Use the exact required principal for precision for the balance
+                    // Coast reached! The required principal is the goal we met.
                     return { years: year + 1, balance: requiredCoastPrincipalThisYearReal, contributions: totalContributions };
                 }
 
@@ -327,35 +415,57 @@
 
 
         /**
-         * Generates the full projection data array (Sprint and Coast).
+         * Generates the full projection data array (Sprint and Coast) and tracks T/R splits.
          */
         function calculateCoastFI() {
+            // Always hide error message at start of successful run attempt
             errorEl.classList.add('hidden');
             projectionContainer.innerHTML = ''; 
             
             // --- Input Collection and Validation ---
             const age = parseFloat(document.getElementById('currentAge').value);
             const retirementAge = parseFloat(document.getElementById('retirementAge').value);
-            const balance = parseFloat(document.getElementById('currentBalance').value);
             const nominalRate = parseFloat(document.getElementById('annualReturn').value) / 100;
             const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
             const income = parseFloat(document.getElementById('annualIncome').value);
-            const initialContributions = parseFloat(document.getElementById('annualContributions').value);
+            
+            // Split Balances and Contributions
+            const traditionalBalance = parseFloat(document.getElementById('traditionalBalance').value);
+            const rothBalance = parseFloat(document.getElementById('rothBalance').value);
+            const traditionalContributions = parseFloat(document.getElementById('traditionalContributions').value);
+            const rothContributions = parseFloat(document.getElementById('rothContributions').value);
 
-            if (isNaN(age) || isNaN(retirementAge) || isNaN(balance) || isNaN(nominalRate) || isNaN(inflationRate) || isNaN(income) || isNaN(initialContributions) || 
-                age < 1 || retirementAge <= age || balance < 0 || income <= 0 || nominalRate <= 0 || inflationRate < 0 || initialContributions < 0) {
+            // Aggregate Totals
+            const totalBalance = traditionalBalance + rothBalance;
+            const totalInitialContributions = traditionalContributions + rothContributions;
+
+
+            // Validation check (Retirement Age must be >= Current Age)
+            if (isNaN(age) || isNaN(retirementAge) || isNaN(totalBalance) || isNaN(nominalRate) || isNaN(inflationRate) || isNaN(income) || isNaN(totalInitialContributions) || 
+                age < 1 || retirementAge < age || totalBalance < 0 || income <= 0 || nominalRate <= 0 || inflationRate < 0 || totalInitialContributions < 0) {
                 
-                // Set globals to initial state
+                // --- Handle invalid state by showing error and resetting key metrics ---
+                errorEl.classList.remove('hidden');
+                
                 fiTargetReal = 0;
                 requiredCoastPrincipalTodayReal = 0;
                 finalCoastValueReal = 0;
                 projectedFinalValueReal = 0;
                 totalContributionsAtCoastRealGlobal = 0; 
+                totalContributionsNominalGlobal = 0; 
                 yearsToCoastGlobal = 'N/A';
                 yearsToCoastNumberGlobal = Infinity;
                 isCoastReachedGlobal = false;
+                traditionalCoastBalanceRealGlobal = 0;
+                rothCoastBalanceRealGlobal = 0;
+                traditionalFinalBalanceRealGlobal = 0;
+                rothFinalBalanceRealGlobal = 0;
+
+                // Ensure verdict shows 'Awaiting Input...'
+                verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-gray-400 transition-all duration-300';
+                verdictEl.innerHTML = `Awaiting Input...`;
                 
-                updateDisplay(); // Update UI to show awaiting input
+                updateDisplay(true); // Force update to reset visuals
                 return;
             }
 
@@ -363,8 +473,10 @@
             inflationRateGlobal = inflationRate;
             ageGlobal = age;
             retirementAgeGlobal = retirementAge;
-            initialBalanceGlobal = balance;
-            realRateGlobal = (1 + nominalRate) / (1 + inflationRate) - 1;
+            initialBalanceGlobal = totalBalance; 
+            
+            // Calculate Real Rate: (1 + r_nominal) / (1 + i) - 1
+            realRateGlobal = (1 + nominalRate) / (1 + inflationRate) - 1; 
             
             fiTargetReal = income * 25;
             const yearsToRetirement = Math.max(0, retirementAge - age);
@@ -374,26 +486,42 @@
             // --- Simulation Logic Setup ---
             projectionData = [];
             let yearsToCoastLocal = 0;
-            let finalCoastValueLocal = 0;
+            let finalCoastValueLocal = 0; // The REQUIRED principal at the coast age
             let coastAgeLocal = 0;
-            let isCoastReachedLocal = (balance >= requiredCoastPrincipalTodayReal); 
             
-            let currentBalanceReal = balance;
-            let currentAge = age;
-            let year = 0;
-            let isSprinting = true;
-            let totalContributionsReal = 0; // tracking total contributions in real dollars
+            let currentTraditionalBalanceReal = traditionalBalance;
+            let currentRothBalanceReal = rothBalance;
             
+            let currentAge = age; 
+            let totalContributionsReal = 0; 
+            let totalContributionsNominal = 0; 
+            
+            // Initial check: Did they already hit Coast FI?
+            let isCoastReachedLocal = (totalBalance >= requiredCoastPrincipalTodayReal); 
+            let isSprinting = !isCoastReachedLocal;
+
             if (isCoastReachedLocal) {
-                isSprinting = false;
+                // Already coasted - set initial results
                 coastAgeLocal = age;
-                finalCoastValueLocal = balance;
+                finalCoastValueLocal = requiredCoastPrincipalTodayReal; // Use required for metric consistency
+                yearsToCoastLocal = 0; 
+                
+                // Initial balances are the coast balances
+                traditionalCoastBalanceRealGlobal = traditionalBalance;
+                rothCoastBalanceRealGlobal = rothBalance;
+                totalContributionsAtCoastRealGlobal = 0; 
+                totalContributionsNominalGlobal = 0; 
             }
 
             // --- Iterative calculation loop from current age to retirement age ---
+            let year = 0;
             while (currentAge < retirementAge) {
+                year++; // Year number (1-indexed)
                 
-                const startingBalanceReal = currentBalanceReal; // Capture starting balance for this year's row
+                // Use the T/R balances from the end of the previous year
+                const startingTraditionalBalanceReal = currentTraditionalBalanceReal;
+                const startingRothBalanceReal = currentRothBalanceReal;
+                const startingBalanceReal = startingTraditionalBalanceReal + startingRothBalanceReal;
                 
                 // Years left to compound *after* this year ends
                 const remainingYears = retirementAge - (currentAge + 1); 
@@ -401,72 +529,102 @@
                 // Dynamic Target: The amount needed *at the end of this year* (REAL)
                 const requiredCoastPrincipalThisYearReal = calculateRequiredPrincipal(fiTargetReal, realRateGlobal, remainingYears); 
                 
-                // 1. Balance grows over the year using the REAL rate
-                const growthReal = currentBalanceReal * realRateGlobal; 
-                const balanceAfterGrowthReal = currentBalanceReal + growthReal;
-
-                let actualContributionReal = 0;
+                // 1. Growth 
+                const traditionalGrowthReal = startingTraditionalBalanceReal * realRateGlobal; 
+                const rothGrowthReal = startingRothBalanceReal * realRateGlobal;
+                
+                const balanceTraditionalAfterGrowthReal = startingTraditionalBalanceReal + traditionalGrowthReal;
+                const balanceRothAfterGrowthReal = startingRothBalanceReal + rothGrowthReal;
+                
+                let endTraditionalBalanceReal = 0;
+                let endRothBalanceReal = 0;
                 let endBalanceReal = 0;
                 let rowClass = '';
                 let coastTag = '';
 
                 // --- Sprint Logic (Active Contributions in Real Dollars) ---
                 if (isSprinting) {
-                    actualContributionReal = initialContributions; // Contribution maintained in real terms
+                    const actualTraditionalContributionReal = traditionalContributions;
+                    const actualRothContributionReal = rothContributions;
+                    const actualContributionRealTotal = actualTraditionalContributionReal + actualRothContributionReal;
+
+                    const calculatedEndTraditionalBalanceReal = balanceTraditionalAfterGrowthReal + actualTraditionalContributionReal;
+                    const calculatedEndRothBalanceReal = balanceRothAfterGrowthReal + actualRothContributionReal;
+                    const totalCalculatedEnd = calculatedEndTraditionalBalanceReal + calculatedEndRothBalanceReal; // Full end balance
                     
-                    endBalanceReal = balanceAfterGrowthReal + initialContributions;
+                    // Calculate Nominal contribution for this specific year
+                    const contributionNominalThisYear = convertToNominal(actualContributionRealTotal, year, inflationRate); 
                     
                     // Check if Coast FI is reached this year
-                    if (endBalanceReal >= requiredCoastPrincipalThisYearReal) {
+                    if (totalCalculatedEnd >= requiredCoastPrincipalThisYearReal && !isCoastReachedLocal) {
                         isSprinting = false; // Stop contributions next year
-                        isCoastReachedLocal = true;
+                        isCoastReachedLocal = true; // Mark as reached
                         
-                        // Accumulate contributions *before* setting final values
-                        totalContributionsReal += initialContributions; // ACCUMULATE
-                        
-                        // Set the exact end balance to the required principal for simulation clarity
-                        endBalanceReal = requiredCoastPrincipalThisYearReal; 
-                        
-                        // Record the milestone values
-                        finalCoastValueLocal = endBalanceReal;
-                        yearsToCoastLocal = year + 1;
+                        // Record the milestone values (the required value)
+                        finalCoastValueLocal = requiredCoastPrincipalThisYearReal;
+                        yearsToCoastLocal = year;
                         coastAgeLocal = currentAge + 1;
-
+                        
+                        // Record Account-specific Coast Balances (proportional split of the REQUIRED principal)
+                        const proportion = calculatedEndTraditionalBalanceReal / totalCalculatedEnd;
+                        traditionalCoastBalanceRealGlobal = requiredCoastPrincipalThisYearReal * proportion;
+                        rothCoastBalanceRealGlobal = requiredCoastPrincipalThisYearReal * (1 - proportion);
+                        
                         rowClass = 'sprint-end-row';
                         coastTag = '🚀 COAST FI!';
-                    } else {
-                        // Still sprinting, add contributions
-                        totalContributionsReal += initialContributions; // ACCUMULATE
+                    }
+                    
+                    // Update Balances for next iteration (MUST use the FULL calculated amount)
+                    endTraditionalBalanceReal = calculatedEndTraditionalBalanceReal;
+                    endRothBalanceReal = calculatedEndRothBalanceReal;
+                    endBalanceReal = totalCalculatedEnd;
+                    
+                    // Always accumulate contributions while sprinting
+                    totalContributionsReal += actualContributionRealTotal; 
+                    totalContributionsNominal += contributionNominalThisYear; 
+                    
+                    if (isSprinting) {
                         rowClass = 'hover:bg-gray-50'; 
                     }
+
                 } else {
                     // --- Coast Logic (Passive Compounding) ---
-                    actualContributionReal = 0;
-                    endBalanceReal = balanceAfterGrowthReal; // Only real growth, no contribution
+                    const actualTraditionalContributionReal = 0;
+                    const actualRothContributionReal = 0;
+
+                    endTraditionalBalanceReal = balanceTraditionalAfterGrowthReal;
+                    endRothBalanceReal = balanceRothAfterGrowthReal;
+                    endBalanceReal = endTraditionalBalanceReal + endRothBalanceReal;
+                    
                     rowClass = 'coast-phase-row';
                 }
 
+                // Update T/R balances for the start of the *next* year
+                currentTraditionalBalanceReal = endTraditionalBalanceReal;
+                currentRothBalanceReal = endRothBalanceReal;
+
                 // --- Calculate Nominal Values for Table Storage ---
-                const yearsPassed = year + 1;
+                const actualContributionRealTotal = isSprinting ? (traditionalContributions + rothContributions) : 0; // Use input value if sprinting, 0 if coasting/reached
+                const contributionNominal = convertToNominal(actualContributionRealTotal, year, inflationRate); 
                 
-                // Nominal values are calculated by inflating the real amounts by yearsPassed
-                const requiredPrincipalNominal = convertToNominal(requiredCoastPrincipalThisYearReal, yearsPassed, inflationRate);
-                const growthNominal = convertToNominal(growthReal, yearsPassed, inflationRate);
-                const contributionNominal = convertToNominal(actualContributionReal, yearsPassed, inflationRate);
-                const endBalanceNominal = convertToNominal(endBalanceReal, yearsPassed, inflationRate);
+                const requiredPrincipalNominal = convertToNominal(requiredCoastPrincipalThisYearReal, year, inflationRate);
+                const growthReal = traditionalGrowthReal + traditionalGrowthReal;
+                const growthNominal = convertToNominal(growthReal, year, inflationRate);
                 
-                // Calculate Nominal Starting Balance (inflated by yearsPassed - 1, or just year)
-                const startingBalanceNominal = convertToNominal(startingBalanceReal, year, inflationRate);
+                const endBalanceNominal = convertToNominal(endBalanceReal, year, inflationRate);
+                
+                // Calculate Nominal Starting Balance (inflated by year-1)
+                const startingBalanceNominal = convertToNominal(startingBalanceReal, year - 1, inflationRate);
 
 
-                // --- Store Projection Data ---
+                // --- Store Projection Data (using TOTAL figures for the main table) ---
                 projectionData.push({
-                    year: year + 1,
+                    year: year,
                     age: currentAge + 1,
                     requiredPrincipalReal: requiredCoastPrincipalThisYearReal,
                     startingBalanceReal: startingBalanceReal,
                     growthReal: growthReal,
-                    contributionReal: actualContributionReal,
+                    contributionReal: actualContributionRealTotal, // Use the real contribution amount (0 if coasting)
                     endBalanceReal: endBalanceReal,
                     
                     requiredPrincipalNominal: requiredPrincipalNominal,
@@ -480,44 +638,48 @@
                     coastTag: coastTag
                 });
 
-                currentBalanceReal = endBalanceReal; // Balance for the start of the *next* year
                 currentAge++;
-                year++;
             }
 
             // --- Finalize Global Metrics ---
-            projectedFinalValueReal = currentBalanceReal;
-            yearsToCoastGlobal = yearsToCoastLocal === 0 ? '0 years' : `${yearsToCoastLocal.toFixed(0)} years`;
-            yearsToCoastNumberGlobal = yearsToCoastLocal;
-            coastAgeGlobal = coastAgeLocal;
-            finalCoastValueReal = finalCoastValueLocal;
-            totalContributionsAtCoastRealGlobal = totalContributionsReal; // STORE FINAL REAL CONTRIBUTIONS
+            // Final T/R balances at retirement age (from the last loop iteration)
+            traditionalFinalBalanceRealGlobal = currentTraditionalBalanceReal;
+            rothFinalBalanceRealGlobal = currentRothBalanceReal;
+            
+            projectedFinalValueReal = traditionalFinalBalanceRealGlobal + rothFinalBalanceRealGlobal;
+            
             isCoastReachedGlobal = isCoastReachedLocal;
+            
+            if (isCoastReachedLocal) {
+                yearsToCoastGlobal = yearsToCoastLocal === 0 ? '0 years' : `${yearsToCoastLocal.toFixed(0)} years`;
+                yearsToCoastNumberGlobal = yearsToCoastLocal;
+            } else {
+                yearsToCoastGlobal = 'N/A';
+                yearsToCoastNumberGlobal = Infinity;
+            }
+            
+            coastAgeGlobal = coastAgeLocal;
+            finalCoastValueReal = finalCoastValueLocal; // The required principal used for the milestone
+
+            totalContributionsAtCoastRealGlobal = totalContributionsReal; 
+            totalContributionsNominalGlobal = totalContributionsNominal; 
             
             // Call the function to render the UI with the default mode
             updateDisplay();
         }
 
         /**
-         * Generates and updates the suggestions section.
+         * Generates and updates the suggestions section. (Uses total values)
          */
         function updateSuggestions(currentContributions) {
             
-            if (!isCoastReachedGlobal && yearsToCoastNumberGlobal === Infinity) {
-                // If they haven't reached FI even with contributions, no simple suggestion can be given.
+            if (!isCoastReachedGlobal || yearsToCoastNumberGlobal === Infinity || yearsToCoastNumberGlobal === 0) {
                 suggestionsContainer.classList.add('hidden');
                 return;
             }
 
-            // Show the suggestions container if coasting isn't immediate (years > 0)
-            if (yearsToCoastNumberGlobal > 0) {
-                 suggestionsContainer.classList.remove('hidden');
-            } else {
-                 suggestionsContainer.classList.add('hidden');
-                 return;
-            }
+            suggestionsContainer.classList.remove('hidden');
             
-            // The total contributions for the current (original) timeline
             const originalTotalContributions = totalContributionsAtCoastRealGlobal; 
             const currentYears = yearsToCoastNumberGlobal;
             const retireAge = retirementAgeGlobal;
@@ -550,7 +712,7 @@
                         You'd shave off approximately <span class="font-extrabold">${timeSaved1.toFixed(1)} years!</span>
                     </p>
                     <p class="text-sm font-semibold text-green-600 border-t pt-2 mt-2">
-                        Total cash contributions saved: <span class="font-extrabold">${formatCurrency(contributionSavings1)}</span> (Today's $)
+                        Total cash contributions saved (in today's $): <span class="font-extrabold">${formatCurrency(contributionSavings1)}</span>
                     </p>
                 `;
             } else {
@@ -589,7 +751,7 @@
                         You'd shave off approximately <span class="font-extrabold">${timeSaved2.toFixed(1)} years!</span>
                     </p>
                     <p class="text-sm font-semibold text-green-600 border-t pt-2 mt-2">
-                        Total cash contributions saved: <span class="font-extrabold">${formatCurrency(contributionSavings2)}</span> (Today's $)
+                        Total cash contributions saved (in today's $): <span class="font-extrabold">${formatCurrency(contributionSavings2)}</span>
                     </p>
                 `;
             } else {
@@ -603,12 +765,38 @@
 
         /**
          * Renders the UI (Key Milestones and Table) based on the current displayMode.
+         * @param {boolean} isInitialRender - True if called due to invalid input/initial load.
          */
-        function updateDisplay() {
-            // Determine the prefix/suffix for key milestone fields
-            const currentContributions = parseFloat(document.getElementById('annualContributions').value);
+        function updateDisplay(isInitialRender = false) {
             
-            // 1. Update Suggestions (must be done before other calculations are finalized)
+            if (isInitialRender || fiTargetReal === 0 || projectionData.length === 0) {
+                 // Reset fields to 'N/A' or '0' when in an invalid state or no data
+                 targetFIEl.textContent = '$0';
+                 requiredCoastPrincipalEl.textContent = '$0';
+                 yearsToCoastEl.textContent = 'N/A';
+                 valueAtCoast.textContent = '$0';
+                 totalContributionsEl.textContent = '$0';
+                 coastAgeDisplayEl.textContent = 'N/A';
+                 traditionalCoastBalanceEl.textContent = '$0';
+                 rothCoastBalanceEl.textContent = '$0';
+                 traditionalFinalBalanceEl.textContent = '$0';
+                 rothFinalBalanceEl.textContent = '$0';
+                 projectedFinalValueEl.textContent = '$0';
+                 yearsToRetirementEl.textContent = '0';
+                 realRateEl.textContent = '0%';
+                 rateDisplayEl.innerHTML = `Real Rate of Return: <span id="realRate" class="font-bold text-secondary">0%</span>`;
+                 
+                 suggestionsContainer.classList.add('hidden');
+                 projectionContainer.innerHTML = '';
+                 
+                 // Prevent further display logic until valid input is received
+                 return;
+            }
+            
+            // Aggregate the total annual contributions from the two input fields
+            const currentContributions = parseFloat(document.getElementById('traditionalContributions').value) + parseFloat(document.getElementById('rothContributions').value);
+            
+            // 1. Update Suggestions 
             updateSuggestions(currentContributions);
 
 
@@ -616,7 +804,7 @@
             
             // Re-calculate rates for display
             const nominalRate = parseFloat(document.getElementById('annualReturn').value) / 100;
-            const realRate = (1 + nominalRate) / (1 + inflationRateGlobal) - 1;
+            const yearsToRetirementValue = retirementAgeGlobal - ageGlobal;
             
             // 2. Context and Rate Label
             valueContextEl.innerHTML = displayMode === 'real' 
@@ -624,74 +812,101 @@
                 : 'All projected values are shown in **future dollars (Nominal)**.';
                 
             // 3. Years to Retirement
-            const yearsToRetirementValue = retirementAgeGlobal - ageGlobal;
             yearsToRetirementEl.textContent = yearsToRetirementValue > 0 ? yearsToRetirementValue.toFixed(0) : '0';
+            retirementAgeDisplayEl.textContent = retirementAgeGlobal.toFixed(0);
 
             // 4. Rate of Return
-            realRateEl.textContent = displayMode === 'nominal' 
-                ? (nominalRate * 100).toFixed(2) + '%'
-                : (realRate * 100).toFixed(2) + '%';
-            
             // Update Rate Label text
-            const rateLabel = document.querySelector('#results .grid p:nth-child(2)');
-            if (rateLabel) {
-                 rateLabel.innerHTML = displayMode === 'nominal' 
-                    ? `Nominal Rate: <span id="realRate" class="font-bold text-secondary">${(nominalRate * 100).toFixed(2)}%</span>`
-                    : `Real Rate of Return: <span id="realRate" class="font-bold text-secondary">${(realRate * 100).toFixed(2)}%</span>`;
-            }
+            rateDisplayEl.innerHTML = displayMode === 'nominal' 
+                ? `Nominal Rate: <span id="realRate" class="font-bold text-secondary">${(nominalRate * 100).toFixed(2)}%</span>`
+                : `Real Rate of Return: <span id="realRate" class="font-bold text-secondary">${(realRateGlobal * 100).toFixed(2)}%</span>`;
+
 
             // 5. FI Target
             const fiTargetValue = displayMode === 'nominal' 
-                ? convertToNominal(fiTargetReal, retirementAgeGlobal - ageGlobal, inflationRateGlobal)
+                ? convertToNominal(fiTargetReal, yearsToRetirementValue, inflationRateGlobal)
                 : fiTargetReal;
             targetFIEl.textContent = formatCurrency(fiTargetValue);
 
             // 6. Required Principal TODAY
             const requiredCoastPrincipalValue = displayMode === 'nominal' 
-                ? convertToNominal(requiredCoastPrincipalTodayReal, 0, inflationRateGlobal) // No compounding, just today's value
+                ? convertToNominal(requiredCoastPrincipalTodayReal, 0, inflationRateGlobal) // Inflating by 0 years = today's nominal value
                 : requiredCoastPrincipalTodayReal;
             requiredCoastPrincipalEl.textContent = formatCurrency(requiredCoastPrincipalValue);
 
             // 7. Years to Coast
             yearsToCoastEl.textContent = yearsToCoastGlobal;
 
-            // 8. Value at Coast Date
-            let valueAtCoastValue = 0;
-            if (isCoastReachedGlobal) {
+            // 8. Required Value at Coast Date (Total)
+            let requiredValueAtCoastDate = 0;
+            if (isCoastReachedGlobal && yearsToCoastGlobal !== 'N/A') {
                 const yearsToCoastNumber = parseFloat(yearsToCoastGlobal.split(' ')[0]);
-                valueAtCoastValue = displayMode === 'nominal'
+                requiredValueAtCoastDate = displayMode === 'nominal'
                     ? convertToNominal(finalCoastValueReal, yearsToCoastNumber, inflationRateGlobal)
                     : finalCoastValueReal;
             }
-            valueAtCoast.textContent = formatCurrency(valueAtCoastValue);
+            valueAtCoast.textContent = formatCurrency(requiredValueAtCoastDate);
             
-            // 9. NEW: Total Contributions
+            // 9. Total Contributions at Coast
             let totalContributionsValue = 0;
-            if (isCoastReachedGlobal) {
-                const yearsToCoastNumber = parseFloat(yearsToCoastGlobal.split(' ')[0]);
-                
+            if (isCoastReachedGlobal && yearsToCoastGlobal !== 'N/A') {
                 if (displayMode === 'nominal') {
-                    // Inflate the total real contributions to the value at the time the coast was achieved.
-                    // This gives the total purchasing power required at that future date.
-                    totalContributionsValue = convertToNominal(totalContributionsAtCoastRealGlobal, yearsToCoastNumber, inflationRateGlobal);
+                    // Use the correctly accumulated Nominal Contributions (sum of inflated cash payments)
+                    totalContributionsValue = totalContributionsNominalGlobal;
                 } else {
-                    // Total contributions in today's purchasing power
+                    // Total contributions in today's purchasing power (Real)
                     totalContributionsValue = totalContributionsAtCoastRealGlobal;
                 }
             }
             totalContributionsEl.textContent = formatCurrency(totalContributionsValue);
 
-            // 10. Projected Final Value
-            const projectedFinalValue = displayMode === 'nominal' 
-                ? convertToNominal(projectedFinalValueReal, retirementAgeGlobal - ageGlobal, inflationRateGlobal)
-                : projectedFinalValueReal;
+            // --- 10. Coast Account Balances ---
+            if (isCoastReachedGlobal && yearsToCoastGlobal !== 'N/A') {
+                const yearsToCoastNumber = parseFloat(yearsToCoastGlobal.split(' ')[0]);
+                
+                coastAgeDisplayEl.textContent = coastAgeGlobal.toFixed(0);
+
+                const tradCoastValue = displayMode === 'nominal' 
+                    ? convertToNominal(traditionalCoastBalanceRealGlobal, yearsToCoastNumber, inflationRateGlobal)
+                    : traditionalCoastBalanceRealGlobal;
+                
+                const rothCoastValue = displayMode === 'nominal'
+                    ? convertToNominal(rothCoastBalanceRealGlobal, yearsToCoastNumber, inflationRateGlobal)
+                    : rothCoastBalanceRealGlobal;
+
+                traditionalCoastBalanceEl.textContent = formatCurrency(tradCoastValue);
+                rothCoastBalanceEl.textContent = formatCurrency(rothCoastValue);
+            } else {
+                coastAgeDisplayEl.textContent = 'N/A';
+                traditionalCoastBalanceEl.textContent = '$0';
+                rothCoastBalanceEl.textContent = '$0';
+            }
+
+
+            // --- 11. Final Retirement Account Balances ---
+            const yearsToFinal = retirementAgeGlobal - ageGlobal;
+            
+            const tradFinalValue = displayMode === 'nominal' 
+                ? convertToNominal(traditionalFinalBalanceRealGlobal, yearsToFinal, inflationRateGlobal)
+                : traditionalFinalBalanceRealGlobal;
+
+            const rothFinalValue = displayMode === 'nominal' 
+                ? convertToNominal(rothFinalBalanceRealGlobal, yearsToFinal, inflationRateGlobal)
+                : rothFinalBalanceRealGlobal;
+
+            traditionalFinalBalanceEl.textContent = formatCurrency(tradFinalValue);
+            rothFinalBalanceEl.textContent = formatCurrency(rothFinalValue);
+
+
+            // 12. Projected Final Value (Total)
+            const projectedFinalValue = tradFinalValue + rothFinalValue; // Sum the T/R nominal/real values
             projectedFinalValueEl.textContent = formatCurrency(projectedFinalValue);
             
             // --- Verdict Logic (Uses REAL for comparison) ---
-            if (isCoastReachedGlobal) {
-                if (parseFloat(yearsToCoastGlobal.split(' ')[0]) === 0) {
+            if (isCoastReachedGlobal && projectedFinalValueReal >= fiTargetReal * 0.999) {
+                if (yearsToCoastNumberGlobal === 0) {
                     verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-primary transition-all duration-300';
-                    verdictEl.innerHTML = `🎉 **COAST FI ACHIEVED!** You are already coasting.`;
+                    verdictEl.innerHTML = `🎉 **COAST FI ACHIEVED!** You are already coasting at Age **${ageGlobal.toFixed(0)}**.`;
                     yearsToCoastEl.textContent = '0 years (Age ' + ageGlobal.toFixed(0) + ')';
                 } else {
                     verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-yellow-600 transition-all duration-300';
@@ -702,7 +917,13 @@
                 projectedFinalValueEl.classList.add('text-primary');
             } else {
                 verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-red-500 transition-all duration-300';
-                verdictEl.innerHTML = `❌ **FI TARGET MISSED!** Coast FI was not met by Age ${retirementAgeGlobal}. Increase contributions or lower your target.`;
+                
+                if (yearsToRetirementValue === 0) {
+                    verdictEl.innerHTML = `❌ **FI TARGET MISSED!** Not enough funds by Age ${retirementAgeGlobal}. Increase balance or lower target.`;
+                } else {
+                    verdictEl.innerHTML = `❌ **FI TARGET MISSED!** Coast FI was not met by Age ${retirementAgeGlobal}. Increase contributions or lower your target.`;
+                }
+                
                 yearsToCoastEl.textContent = `Not met by Age ${retirementAgeGlobal}`;
                 projectedFinalValueEl.classList.remove('text-primary');
                 projectedFinalValueEl.classList.add('text-red-500');
@@ -710,7 +931,7 @@
 
             // --- Render Projection Table ---
             const principalHeader = displayMode === 'nominal' ? 'Req. Principal (Future $)' : 'Req. Principal (Today\'s $)';
-            const startingBalanceHeader = 'Start Balance'; 
+            const startingBalanceHeader = 'Start Balance (Total)'; 
             
             let projectionHTML = `
                 <h3 class="text-lg font-semibold text-secondary mt-6 mb-3 border-b pb-1 text-center">Full FI Roadmap (Values in ${valueKeySuffix} Dollars)</h3>
@@ -720,12 +941,12 @@
                         <thead class="bg-gray-100 sticky top-0">
                             <tr>
                                 <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Year #</th>
-                                <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Age (EOD)</th>
+                                <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Age</th>
                                 <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">${principalHeader}</th>
                                 <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">${startingBalanceHeader}</th>
                                 <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Growth</th>
                                 <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Contribution</th>
-                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">End Balance</th>
+                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">End Balance (Total)</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -735,7 +956,7 @@
                 const requiredPrincipal = data[`requiredPrincipal${valueKeySuffix}`];
                 const startingBalance = data[`startingBalance${valueKeySuffix}`];
                 const growth = data[`growth${valueKeySuffix}`];
-                const contribution = data[`contribution${valueKeySuffix}`];
+                const contribution = data[`contribution${valueKeySuffix}`]; 
                 const endBalance = data[`endBalance${valueKeySuffix}`];
                 
                 projectionHTML += `
