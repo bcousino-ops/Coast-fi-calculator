@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker</title>
+    <meta name="description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+    <link rel="canonical" href="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]"> <!-- IMPORTANT: Replace this placeholder with the actual live URL of your calculator. -->
+
+    <!-- Open Graph / Social Media Tags (Used by Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]">
+    <meta property="og:title" content="Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker">
+    <meta property="og:description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+    <!-- You can add a preview image here: <meta property="og:image" content="URL_TO_A_PREVIEW_IMAGE"> -->
+
+    <!-- Twitter Card Tags (Used by X/Twitter) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="[REPLACE WITH YOUR LIVE GITHUB PAGES URL]">
+    <meta name="twitter:title" content="Coast FI Calculator | Inflation-Adjusted Financial Independence Tracker">
+    <meta name="twitter:description" content="Calculate your Coast FI number and see an inflation-adjusted roadmap to financial independence. Track your sprint and coast phases in real and nominal dollars.">
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and mobile optimization */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .container-card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Hide number input spinners for cleaner look */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        .coast-phase-row {
+            background-color: #ecfdf5; /* Tailwind Emerald 50 - Light Green */
+            color: #065f46; /* Tailwind Emerald 800 */
+        }
+        .sprint-end-row {
+            background-color: #fef3c7; /* Tailwind Amber 100 - Light Yellow */
+            font-weight: bold;
+            border-left: 4px solid #f59e0b; /* Tailwind Amber 500 */
+        }
+        .final-row {
+            background-color: #d1fae5; /* Tailwind Emerald 100 */
+            border-top: 2px solid #10b981;
+            font-weight: bold;
+        }
+        .table-container {
+            max-height: 400px; /* Limit height on mobile/desktop for scrollability */
+            overflow-y: auto;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#10b981', /* Emerald 500 (Success) */
+                        'secondary': '#374151', /* Gray 700 (Text) */
+                        'accent-blue': '#2563eb', /* Blue 600 */
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="p-4 sm:p-8 min-h-screen flex items-start justify-center">
+
+    <div id="app" class="w-full max-w-4xl">
+        <div class="container-card bg-white p-6 sm:p-8 rounded-xl">
+            <h1 class="text-3xl font-bold text-secondary mb-2 text-center">Inflation-Adjusted Coast FI Roadmap</h1>
+            <p class="text-sm text-gray-500 mb-6 text-center" id="valueContext">All projected values are shown in **today's purchasing power (Real)**.</p>
+
+            <form id="coastFiForm" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                <!-- Current Age Input -->
+                <div>
+                    <label for="currentAge" class="block text-sm font-medium text-gray-700">Current Age</label>
+                    <input type="number" id="currentAge" value="30" min="18" max="90" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Retirement Age Input -->
+                <div>
+                    <label for="retirementAge" class="block text-sm font-medium text-gray-700">Retirement Age</label>
+                    <input type="number" id="retirementAge" value="65" min="40" max="90" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Current Portfolio Value -->
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="currentBalance" class="block text-sm font-medium text-gray-700">Current Portfolio ($)</label>
+                    <input type="number" id="currentBalance" value="100000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Expected Annual Return (Nominal) -->
+                <div>
+                    <label for="annualReturn" class="block text-sm font-medium text-gray-700">Nominal Return (%)</label>
+                    <input type="number" id="annualReturn" value="7" step="0.1" min="1" max="15" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Annual Inflation Rate -->
+                <div>
+                    <label for="inflationRate" class="block text-sm font-medium text-gray-700">Inflation Rate (%)</label>
+                    <input type="number" id="inflationRate" value="3" step="0.1" min="0" max="10" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Desired Annual Retirement Income -->
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="annualIncome" class="block text-sm font-medium text-gray-700">Desired Income ($)</label>
+                    <input type="number" id="annualIncome" value="40000" min="1000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+
+                <!-- Annual Contributions Input -->
+                <div class="md:col-span-6">
+                    <label for="annualContributions" class="block text-sm font-medium text-gray-700">Annual Contributions ($) (Maintained in Real Terms)</label>
+                    <input type="number" id="annualContributions" value="12000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                </div>
+            </form>
+
+            <div id="results" class="mt-8 p-4 rounded-xl border border-gray-200 bg-gray-50">
+                
+                <!-- Display Mode Toggle -->
+                <div class="flex justify-center mb-4">
+                    <button id="realModeBtn" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-l-lg bg-primary text-white transition hover:bg-emerald-600 focus:outline-none">
+                        Show Real Values (Today's $)
+                    </button>
+                    <button id="nominalModeBtn" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-r-lg bg-gray-300 text-gray-700 transition hover:bg-gray-400 focus:outline-none">
+                        Show Nominal Values (Future $)
+                    </button>
+                </div>
+
+                <h2 class="text-xl font-semibold text-secondary mb-3 text-center">Key Milestones</h2>
+                <div class="grid grid-cols-2 gap-y-2 text-sm text-gray-600">
+                    <p>FI Target ($F$, 25x Income): <span id="targetFI" class="font-bold text-secondary">$0</span></p>
+                    <p>Rate of Return: <span id="realRate" class="font-bold text-secondary">0%</span></p>
+                    <p>Years until Retirement ($n$): <span id="yearsToRetirement" class="font-bold text-secondary">0</span> years</p>
+                    
+                    <!-- Coast Principal required today (P_coast calculated for the current age) -->
+                    <p class="text-base font-semibold text-accent-blue mt-3 col-span-2">Coast Principal Required TODAY: <span id="requiredCoastPrincipalEl" class="font-extrabold">$0</span></p>
+                    
+                    <!-- Years to Coast -->
+                    <p class="text-base font-semibold text-primary">Years to Reach Coast FI: <span id="yearsToCoastEl" class="font-extrabold text-secondary">N/A</span></p>
+
+                    <!-- Value at Coast Date -->
+                    <p class="text-sm">Value when Coast FI is Reached: <span id="valueAtCoast" class="font-bold text-secondary">$0</span></p>
+
+                    <!-- Final Value at Retirement -->
+                    <p class="text-base font-semibold text-secondary col-span-2">Projected Final Value at Retirement: <span id="projectedFinalValue" class="font-extrabold">$0</span></p>
+                </div>
+
+                <div id="verdict" class="mt-4 p-4 rounded-lg text-white font-bold text-lg text-center transition-all duration-300">
+                    Awaiting Input...
+                </div>
+            </div>
+            
+            <!-- AFFILIATE CTA BOX (New Addition for Monetization) -->
+            <div class="mt-8 p-6 bg-blue-50 border border-accent-blue rounded-xl text-center">
+                <h3 class="text-xl font-bold text-accent-blue mb-2">Ready to Start Coasting?</h3>
+                <p class="text-gray-700 mb-4 text-sm">Invest your Coast FI principal in a reliable, low-cost platform.</p>
+                <a href="https://fidelity.app.link/e/bY4g8p72aXb" target="_blank" class="inline-block bg-accent-blue text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    Open an Account with Fidelity &rarr;
+                </a>
+                <p class="mt-2 text-xs text-gray-500">Affiliate Link: This site may earn a commission if you sign up.</p>
+            </div>
+            
+            <!-- Projection Table Container -->
+            <div id="projectionTableContainer" class="mt-8">
+                <!-- Dynamic projection table will be inserted here -->
+            </div>
+
+            <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm" role="alert">
+                Please ensure all fields are filled with valid numbers.
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const form = document.getElementById('coastFiForm');
+        const targetFIEl = document.getElementById('targetFI');
+        const yearsToRetirementEl = document.getElementById('yearsToRetirement');
+        const requiredCoastPrincipalEl = document.getElementById('requiredCoastPrincipalEl');
+        const yearsToCoastEl = document.getElementById('yearsToCoastEl');
+        const valueAtCoast = document.getElementById('valueAtCoast');
+        const projectedFinalValueEl = document.getElementById('projectedFinalValue');
+        const verdictEl = document.getElementById('verdict');
+        const errorEl = document.getElementById('errorMessage');
+        const projectionContainer = document.getElementById('projectionTableContainer');
+        const realRateEl = document.getElementById('realRate');
+        const realModeBtn = document.getElementById('realModeBtn');
+        const nominalModeBtn = document.getElementById('nominalModeBtn');
+        const valueContextEl = document.getElementById('valueContext');
+
+        // --- Global State ---
+        let projectionData = [];
+        let displayMode = 'real'; // 'real' or 'nominal'
+        let fiTargetReal = 0;
+        let requiredCoastPrincipalTodayReal = 0;
+        let finalCoastValueReal = 0;
+        let projectedFinalValueReal = 0;
+        let yearsToCoastGlobal = 'N/A';
+        let coastAgeGlobal = 0;
+        let retirementAgeGlobal = 0;
+        let ageGlobal = 0;
+        let isCoastReachedGlobal = false;
+        let inflationRateGlobal = 0;
+
+        /**
+         * Formats a number into a currency string (e.g., $1,234,567)
+         * @param {number} amount
+         * @returns {string}
+         */
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        /**
+         * Calculates the required Coast FI Principal for a given remaining time.
+         * P_coast = F / (1 + r_real)^n
+         * @param {number} fiTarget - The final FI number (25x income) in real dollars.
+         * @param {number} realRate - The real (inflation-adjusted) annual return rate (as a decimal).
+         * @param {number} remainingYears - The number of years left until retirement.
+         * @returns {number} The required Coast Principal in real dollars.
+         */
+        function calculateRequiredPrincipal(fiTarget, realRate, remainingYears) {
+             if (remainingYears <= 0) return fiTarget;
+             // Use Math.max to prevent negative remaining years causing issues if age > retirementAge
+             const years = Math.max(0, remainingYears);
+             return fiTarget / Math.pow(1 + realRate, years);
+        }
+
+        /**
+         * Converts a real (today's) dollar amount to its nominal (future) dollar amount.
+         * Nominal = Real * (1 + inflation_rate)^years
+         * @param {number} realAmount
+         * @param {number} years
+         * @returns {number} The nominal amount.
+         */
+        function convertToNominal(realAmount, years, inflationRate) {
+            return realAmount * Math.pow(1 + inflationRate, years);
+        }
+
+        /**
+         * Generates the full projection data array (Sprint and Coast).
+         */
+        function calculateCoastFI() {
+            errorEl.classList.add('hidden');
+            projectionContainer.innerHTML = ''; 
+            
+            // --- Input Collection and Validation ---
+            const age = parseFloat(document.getElementById('currentAge').value);
+            const retirementAge = parseFloat(document.getElementById('retirementAge').value);
+            const balance = parseFloat(document.getElementById('currentBalance').value);
+            const nominalRate = parseFloat(document.getElementById('annualReturn').value) / 100;
+            const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
+            const income = parseFloat(document.getElementById('annualIncome').value);
+            const initialContributions = parseFloat(document.getElementById('annualContributions').value);
+
+            if (isNaN(age) || isNaN(retirementAge) || isNaN(balance) || isNaN(nominalRate) || isNaN(inflationRate) || isNaN(income) || isNaN(initialContributions) || 
+                age < 18 || retirementAge <= age || balance < 0 || income <= 0 || nominalRate <= 0 || inflationRate < 0 || initialContributions < 0) {
+                
+                // Set globals to initial state
+                fiTargetReal = 0;
+                requiredCoastPrincipalTodayReal = 0;
+                finalCoastValueReal = 0;
+                projectedFinalValueReal = 0;
+                yearsToCoastGlobal = 'N/A';
+                isCoastReachedGlobal = false;
+                
+                updateDisplay(); // Update UI to show awaiting input
+                return;
+            }
+
+            // --- Setup Global Variables for Display ---
+            inflationRateGlobal = inflationRate;
+            ageGlobal = age;
+            retirementAgeGlobal = retirementAge;
+            const realRate = (1 + nominalRate) / (1 + inflationRate) - 1;
+            
+            fiTargetReal = income * 25;
+            const yearsToRetirement = Math.max(0, retirementAge - age);
+            
+            requiredCoastPrincipalTodayReal = calculateRequiredPrincipal(fiTargetReal, realRate, yearsToRetirement);
+
+            // --- Simulation Logic Setup ---
+            projectionData = [];
+            let yearsToCoastLocal = 0;
+            let finalCoastValueLocal = 0;
+            let coastAgeLocal = 0;
+            let isCoastReachedLocal = (balance >= requiredCoastPrincipalTodayReal); 
+            
+            let currentBalanceReal = balance;
+            let currentAge = age;
+            let year = 0;
+            let isSprinting = true;
+            
+            if (isCoastReachedLocal) {
+                isSprinting = false;
+                coastAgeLocal = age;
+                finalCoastValueLocal = balance;
+            }
+
+            // --- Iterative calculation loop from current age to retirement age ---
+            while (currentAge < retirementAge) {
+                
+                // Years left to compound *after* this year ends
+                const remainingYears = retirementAge - (currentAge + 1); 
+                
+                // Dynamic Target: The amount needed *at the end of this year* (REAL)
+                const requiredCoastPrincipalThisYearReal = calculateRequiredPrincipal(fiTargetReal, realRate, remainingYears); 
+                
+                // 1. Balance grows over the year using the REAL rate
+                const growthReal = currentBalanceReal * realRate; 
+                const balanceAfterGrowthReal = currentBalanceReal + growthReal;
+
+                let actualContributionReal = 0;
+                let endBalanceReal = 0;
+                let rowClass = '';
+                let coastTag = '';
+
+                // --- Sprint Logic (Active Contributions in Real Dollars) ---
+                if (isSprinting) {
+                    actualContributionReal = initialContributions; // Contribution maintained in real terms
+                    endBalanceReal = balanceAfterGrowthReal + initialContributions;
+                    
+                    // Check if Coast FI is reached this year
+                    if (endBalanceReal >= requiredCoastPrincipalThisYearReal) {
+                        isSprinting = false; // Stop contributions next year
+                        isCoastReachedLocal = true;
+                        
+                        // Set the exact end balance to the required principal for simulation clarity
+                        endBalanceReal = requiredCoastPrincipalThisYearReal; 
+                        
+                        // Record the milestone values
+                        finalCoastValueLocal = endBalanceReal;
+                        yearsToCoastLocal = year + 1;
+                        coastAgeLocal = currentAge + 1;
+
+                        rowClass = 'sprint-end-row';
+                        coastTag = '🚀 COAST FI!';
+                    } else {
+                        rowClass = 'hover:bg-gray-50'; // Still sprinting
+                    }
+                } else {
+                    // --- Coast Logic (Passive Compounding) ---
+                    actualContributionReal = 0;
+                    endBalanceReal = balanceAfterGrowthReal; // Only real growth, no contribution
+                    rowClass = 'coast-phase-row';
+                }
+
+                // --- Calculate Nominal Values for Table Storage ---
+                const yearsPassed = year + 1;
+                
+                // Nominal values are calculated by inflating the real amounts by yearsPassed
+                const requiredPrincipalNominal = convertToNominal(requiredCoastPrincipalThisYearReal, yearsPassed, inflationRate);
+                const growthNominal = convertToNominal(growthReal, yearsPassed, inflationRate);
+                const contributionNominal = convertToNominal(actualContributionReal, yearsPassed, inflationRate);
+                const endBalanceNominal = convertToNominal(endBalanceReal, yearsPassed, inflationRate);
+
+
+                // --- Store Projection Data ---
+                projectionData.push({
+                    year: year + 1,
+                    age: currentAge + 1,
+                    requiredPrincipalReal: requiredCoastPrincipalThisYearReal,
+                    growthReal: growthReal,
+                    contributionReal: actualContributionReal,
+                    endBalanceReal: endBalanceReal,
+                    
+                    requiredPrincipalNominal: requiredPrincipalNominal,
+                    growthNominal: growthNominal,
+                    contributionNominal: contributionNominal,
+                    endBalanceNominal: endBalanceNominal,
+                    
+                    isFinalRow: (currentAge + 1) === retirementAge,
+                    rowClass: rowClass,
+                    coastTag: coastTag
+                });
+
+                currentBalanceReal = endBalanceReal; // Balance for the start of the *next* year
+                currentAge++;
+                year++;
+            }
+
+            // --- Finalize Global Metrics ---
+            projectedFinalValueReal = currentBalanceReal;
+            yearsToCoastGlobal = yearsToCoastLocal === 0 ? '0 years' : `${yearsToCoastLocal.toFixed(0)} years`;
+            coastAgeGlobal = coastAgeLocal;
+            finalCoastValueReal = finalCoastValueLocal;
+            isCoastReachedGlobal = isCoastReachedLocal;
+            
+            // Call the function to render the UI with the default mode
+            updateDisplay();
+        }
+
+        /**
+         * Renders the UI (Key Milestones and Table) based on the current displayMode.
+         */
+        function updateDisplay() {
+            // Determine the prefix/suffix for key milestone fields
+            const prefix = displayMode === 'nominal' ? 'Nominal' : 'Real';
+            
+            // Re-calculate rates for display
+            const nominalRate = parseFloat(document.getElementById('annualReturn').value) / 100;
+            const realRate = (1 + nominalRate) / (1 + inflationRateGlobal) - 1;
+            
+            // 1. Context and Rate Label
+            valueContextEl.innerHTML = displayMode === 'real' 
+                ? 'All projected values are shown in **today\'s purchasing power (Real)**.'
+                : 'All projected values are shown in **future dollars (Nominal)**.';
+                
+            // 2. Years to Retirement (FIXED: This was missing previously)
+            const yearsToRetirementValue = retirementAgeGlobal - ageGlobal;
+            yearsToRetirementEl.textContent = yearsToRetirementValue > 0 ? yearsToRetirementValue.toFixed(0) : '0';
+
+            // 3. Rate of Return
+            realRateEl.textContent = displayMode === 'nominal' 
+                ? (nominalRate * 100).toFixed(2) + '%'
+                : (realRate * 100).toFixed(2) + '%';
+            
+            // Update Rate Label text
+            const rateLabel = document.querySelector('#results .grid p:nth-child(2)');
+            if (rateLabel) {
+                 rateLabel.innerHTML = displayMode === 'nominal' 
+                    ? `Nominal Rate: <span id="realRate" class="font-bold text-secondary">${(nominalRate * 100).toFixed(2)}%</span>`
+                    : `Real Rate of Return: <span id="realRate" class="font-bold text-secondary">${(realRate * 100).toFixed(2)}%</span>`;
+            }
+
+            // 4. FI Target
+            const fiTargetValue = displayMode === 'nominal' 
+                ? convertToNominal(fiTargetReal, retirementAgeGlobal - ageGlobal, inflationRateGlobal)
+                : fiTargetReal;
+            targetFIEl.textContent = formatCurrency(fiTargetValue);
+
+            // 5. Required Principal TODAY
+            const requiredCoastPrincipalValue = displayMode === 'nominal' 
+                ? convertToNominal(requiredCoastPrincipalTodayReal, 0, inflationRateGlobal) // No compounding, just today's value
+                : requiredCoastPrincipalTodayReal;
+            requiredCoastPrincipalEl.textContent = formatCurrency(requiredCoastPrincipalValue);
+
+            // 6. Years to Coast
+            yearsToCoastEl.textContent = yearsToCoastGlobal;
+
+            // 7. Value at Coast Date
+            let valueAtCoastValue = 0;
+            if (isCoastReachedGlobal) {
+                const yearsToCoastNumber = parseFloat(yearsToCoastGlobal.split(' ')[0]);
+                valueAtCoastValue = displayMode === 'nominal'
+                    ? convertToNominal(finalCoastValueReal, yearsToCoastNumber, inflationRateGlobal)
+                    : finalCoastValueReal;
+            }
+            valueAtCoast.textContent = formatCurrency(valueAtCoastValue);
+            
+            // 8. Projected Final Value
+            const projectedFinalValue = displayMode === 'nominal' 
+                ? convertToNominal(projectedFinalValueReal, retirementAgeGlobal - ageGlobal, inflationRateGlobal)
+                : projectedFinalValueReal;
+            projectedFinalValueEl.textContent = formatCurrency(projectedFinalValue);
+            
+            // --- Verdict Logic (Uses REAL for comparison) ---
+            if (isCoastReachedGlobal) {
+                if (parseFloat(yearsToCoastGlobal.split(' ')[0]) === 0) {
+                    verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-primary transition-all duration-300';
+                    verdictEl.innerHTML = `🎉 **COAST FI ACHIEVED!** You are already coasting.`;
+                    yearsToCoastEl.textContent = '0 years (Age ' + ageGlobal.toFixed(0) + ')';
+                } else {
+                    verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-yellow-600 transition-all duration-300';
+                    verdictEl.innerHTML = `⏳ **SPRINT SUCCESSFUL:** Coast FI reached in **${yearsToCoastGlobal}** at age **${coastAgeGlobal.toFixed(0)}**.`;
+                    yearsToCoastEl.textContent = `${yearsToCoastGlobal} (Age ${coastAgeGlobal.toFixed(0)})`;
+                }
+                projectedFinalValueEl.classList.remove('text-red-500');
+                projectedFinalValueEl.classList.add('text-primary');
+            } else {
+                verdictEl.className = 'mt-4 p-4 rounded-lg text-white font-bold text-lg text-center bg-red-500 transition-all duration-300';
+                verdictEl.innerHTML = `❌ **FI TARGET MISSED!** Coast FI was not met by Age ${retirementAgeGlobal}. Increase contributions or lower your target.`;
+                yearsToCoastEl.textContent = `Not met by Age ${retirementAgeGlobal}`;
+                projectedFinalValueEl.classList.remove('text-primary');
+                projectedFinalValueEl.classList.add('text-red-500');
+            }
+
+            // --- Render Projection Table ---
+            const valueKeySuffix = displayMode === 'nominal' ? 'Nominal' : 'Real';
+            const principalHeader = displayMode === 'nominal' ? 'Req. Principal (Future $)' : 'Req. Principal (Today\'s $)';
+            
+            let projectionHTML = `
+                <h3 class="text-lg font-semibold text-secondary mt-6 mb-3 border-b pb-1 text-center">Full FI Roadmap (Values in ${valueKeySuffix} Dollars)</h3>
+                <div class="overflow-x-auto table-container rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-100 sticky top-0">
+                            <tr>
+                                <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Year #</th>
+                                <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Age (EOD)</th>
+                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">${principalHeader}</th>
+                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Growth</th>
+                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Contribution</th>
+                                <th class="p-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">End Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+            `;
+            
+            projectionData.forEach(data => {
+                const requiredPrincipal = data[`requiredPrincipal${valueKeySuffix}`];
+                const growth = data[`growth${valueKeySuffix}`];
+                const contribution = data[`contribution${valueKeySuffix}`];
+                const endBalance = data[`endBalance${valueKeySuffix}`];
+                
+                projectionHTML += `
+                    <tr class="${data.rowClass}">
+                        <td class="p-3 whitespace-nowrap">${data.year}</td>
+                        <td class="p-3 whitespace-nowrap">${data.age.toFixed(0)}</td>
+                        <td class="p-3 whitespace-nowrap text-right text-accent-blue">${formatCurrency(requiredPrincipal)}</td>
+                        <td class="p-3 whitespace-nowrap text-right">${formatCurrency(growth)}</td>
+                        <td class="p-3 whitespace-nowrap text-right">${formatCurrency(contribution)}</td>
+                        <td class="p-3 whitespace-nowrap text-right">${formatCurrency(endBalance)} ${data.coastTag}</td>
+                    </tr>
+                `;
+            });
+
+            projectionHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            projectionContainer.innerHTML = projectionHTML;
+            
+            // --- Update Button Styles ---
+            if (displayMode === 'real') {
+                realModeBtn.classList.add('bg-primary', 'text-white');
+                realModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+                nominalModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+                nominalModeBtn.classList.remove('bg-primary', 'text-white');
+            } else {
+                nominalModeBtn.classList.add('bg-primary', 'text-white');
+                nominalModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+                realModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+                realModeBtn.classList.remove('bg-primary', 'text-white');
+            }
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateCoastFI);
+            });
+            
+            realModeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                displayMode = 'real';
+                updateDisplay();
+            });
+
+            nominalModeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                displayMode = 'nominal';
+                updateDisplay();
+            });
+
+            // Run on load with default values
+            calculateCoastFI();
+        });
+
+    </script>
+</body>
+</html>
+
