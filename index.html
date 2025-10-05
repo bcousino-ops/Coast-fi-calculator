@@ -792,7 +792,10 @@
             timeSaved1 = timeSaved1 > 0 ? timeSaved1 : 0; 
             
             // Calculate contribution savings
-            const contributionSavings1 = originalTotalContributions - newTotalContributions1; 
+            const contributionSavings1 = originalTotalContributions - newTotalContributions1;
+            const isSavings1 = contributionSavings1 >= 0;
+            const savingsClass1 = isSavings1 ? 'text-green-600' : 'text-red-600';
+            const savingsLabel1 = isSavings1 ? 'Total cash contributions saved' : 'Total additional cash contributions';
 
             if (newYears1 < currentYears) {
                 suggestion1El.innerHTML = `
@@ -806,8 +809,8 @@
                     <p class="text-sm font-semibold text-green-600">
                         You'd shave off approximately <span class="font-extrabold">${timeSaved1.toFixed(1)} years!</span>
                     </p>
-                    <p class="text-sm font-semibold text-green-600 border-t pt-2 mt-2">
-                        Total cash contributions saved (in today's $): <span class="font-extrabold">${formatCurrency(contributionSavings1)}</span>
+                    <p class="text-sm font-semibold ${savingsClass1} border-t pt-2 mt-2">
+                        ${savingsLabel1} (in today's $): <span class="font-extrabold">${formatCurrency(Math.abs(contributionSavings1))}</span>
                     </p>
                 `;
             } else {
@@ -832,7 +835,10 @@
             timeSaved2 = timeSaved2 > 0 ? timeSaved2 : 0; 
             
             // Calculate contribution savings
-            const contributionSavings2 = originalTotalContributions - newTotalContributions2; 
+            const contributionSavings2 = originalTotalContributions - newTotalContributions2;
+            const isSavings2 = contributionSavings2 >= 0;
+            const savingsClass2 = isSavings2 ? 'text-green-600' : 'text-red-600';
+            const savingsLabel2 = isSavings2 ? 'Total cash contributions saved' : 'Total additional cash contributions';
 
             if (newYears2 < currentYears) {
                 suggestion2El.innerHTML = `
@@ -846,8 +852,8 @@
                     <p class="text-sm font-semibold text-green-600">
                         You'd shave off approximately <span class="font-extrabold">${timeSaved2.toFixed(1)} years!</span>
                     </p>
-                    <p class="text-sm font-semibold text-green-600 border-t pt-2 mt-2">
-                        Total cash contributions saved (in today's $): <span class="font-extrabold">${formatCurrency(contributionSavings2)}</span>
+                    <p class="text-sm font-semibold ${savingsClass2} border-t pt-2 mt-2">
+                        ${savingsLabel2} (in today's $): <span class="font-extrabold">${formatCurrency(Math.abs(contributionSavings2))}</span>
                     </p>
                 `;
             } else {
