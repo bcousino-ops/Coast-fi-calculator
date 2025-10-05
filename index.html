@@ -100,6 +100,17 @@
             <h1 class="text-3xl font-bold text-secondary mb-2 text-center">Inflation-Adjusted Coast FI Roadmap</h1>
             <p class="text-sm text-gray-500 mb-6 text-center" id="valueContext">All projected values are shown in **today's purchasing power (Real)**.</p>
 
+            <!-- INSTRUCTIONS -->
+            <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-gray-700">
+                <h3 class="font-bold text-lg text-secondary mb-2 text-center">How to Use This Calculator</h3>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>Enter Your Financials:</strong> Fill in your current age, desired retirement age, current investment balances (split between Traditional and Roth accounts), and your expected annual return & inflation rates.</li>
+                    <li><strong>Set Your Goal:</strong> Input your desired annual retirement income (in today's dollars) and how much you currently contribute annually to your Traditional and Roth accounts.</li>
+                    <li><strong>Analyze Your Roadmap:</strong> The tool will instantly calculate your <span class="font-bold text-accent-blue">Coast FI Principal</span>—the amount you need today to coast to retirement. It also generates a year-by-year projection.</li>
+                    <li><strong>Toggle Views:</strong> Use the "Show Real/Nominal Values" buttons to switch between today's purchasing power and future (inflated) dollars.</li>
+                </ol>
+            </div>
+
             <form id="coastFiForm" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                 
                 <!-- ROW 1: Ages, Balances, Rates -->
@@ -151,15 +162,17 @@
                 <!-- Traditional Annual Contribution (Label Updated) -->
                 <div class="col-span-2 sm:col-span-2 md:col-span-2">
                     <label for="traditionalContributions" class="block text-sm font-medium text-gray-700">Traditional Annual Contr. ($)</label>
-                    <input type="number" id="traditionalContributions" value="9000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                    <input type="text" inputmode="decimal" id="traditionalContributions" value="9000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                    <p class="mt-1 text-xs text-gray-500/80">Inline math functions are supported (e.g., 1000*12).</p>
                 </div>
                 
                 <!-- Roth Annual Contribution (Label Updated) -->
                 <div class="col-span-2 sm:col-span-2 md:col-span-2">
                     <label for="rothContributions" class="block text-sm font-medium text-gray-700">Roth Annual Contr. ($)</label>
-                    <input type="number" id="rothContributions" value="3000" min="0" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
+                    <input type="text" inputmode="decimal" id="rothContributions" value="3000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:border-primary focus:ring-primary transition" required>
                     <!-- IRS Limit Reminder -->
                     <p class="mt-1 text-xs text-red-500/80">Remember annual contributions must comply with IRS limits.</p>
+                    <p class="mt-1 text-xs text-gray-500/80">Inline math functions are supported (e.g., 1000*12).</p>
                 </div>
             </form>
 
@@ -1266,12 +1279,49 @@
         }
 
 
+        // --- Math Evaluation ---
+        function evaluateMathExpression(expression) {
+            try {
+                // Allow numbers, arithmetic operators, parentheses, and decimals.
+                if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(expression)) {
+                    const result = new Function('return ' + expression)();
+                    if (typeof result === 'number' && isFinite(result)) {
+                        return result;
+                    }
+                }
+                return null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function setupContributionInput(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('blur', () => {
+                    const expression = input.value;
+                    if (expression.match(/[\+\-\*\/]/)) { // Only evaluate if it contains an operator
+                        const result = evaluateMathExpression(expression);
+                        if (result !== null) {
+                            input.value = result.toFixed(0);
+                            // Manually trigger the input event to recalculate the FI details
+                            input.dispatchEvent(new Event('input'));
+                        }
+                    }
+                });
+            }
+        }
+
+
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = form.querySelectorAll('input');
             inputs.forEach(input => {
                 input.addEventListener('input', calculateCoastFI);
             });
+
+            setupContributionInput('traditionalContributions');
+            setupContributionInput('rothContributions');
             
             realModeBtn.addEventListener('click', (e) => {
                 e.preventDefault();
