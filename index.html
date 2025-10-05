@@ -1316,8 +1316,18 @@
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = form.querySelectorAll('input');
+
+            // Load saved data from localStorage and add event listeners
             inputs.forEach(input => {
-                input.addEventListener('input', calculateCoastFI);
+                const savedValue = localStorage.getItem(input.id);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+
+                input.addEventListener('input', () => {
+                    localStorage.setItem(input.id, input.value);
+                    calculateCoastFI();
+                });
             });
 
             setupContributionInput('traditionalContributions');
