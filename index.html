@@ -599,38 +599,61 @@
 
                 // --- Sprint Logic (Active Contributions in Real Dollars) ---
                 if (isSprinting) {
-                    const actualTraditionalContributionReal = traditionalContributions;
-                    const actualRothContributionReal = rothContributions;
+                    let actualTraditionalContributionReal = traditionalContributions;
+                    let actualRothContributionReal = rothContributions;
                     actualContributionRealTotal = actualTraditionalContributionReal + actualRothContributionReal;
 
-                    const calculatedEndTraditionalBalanceReal = balanceTraditionalAfterGrowthReal + actualTraditionalContributionReal;
-                    const calculatedEndRothBalanceReal = balanceRothAfterGrowthReal + actualRothContributionReal;
-                    const totalCalculatedEnd = calculatedEndTraditionalBalanceReal + calculatedEndRothBalanceReal; // Full end balance
+                    const balanceAfterGrowthReal = balanceTraditionalAfterGrowthReal + balanceRothAfterGrowthReal;
                     
                     // Check if Coast FI is reached this year
                     // FIX: Added a check for floating point equality using a small epsilon (0.0001)
-                    if (totalCalculatedEnd >= requiredCoastPrincipalThisYearReal - 0.0001 && !isCoastReachedLocal) {
+                    if (balanceAfterGrowthReal + actualContributionRealTotal >= requiredCoastPrincipalThisYearReal - 0.0001 && !isCoastReachedLocal) {
                         isSprinting = false; // Stop contributions next year
                         isCoastReachedLocal = true; // Mark as reached
+                        
+                        // Reduce final year's contribution to hit the number exactly
+                        const neededContribution = requiredCoastPrincipalThisYearReal - balanceAfterGrowthReal;
+                        actualContributionRealTotal = Math.max(0, neededContribution);
+
+                        const totalInitialContributionsForRatio = traditionalContributions + rothContributions;
+                        if (totalInitialContributionsForRatio > 0) {
+                            const traditionalRatio = traditionalContributions / totalInitialContributionsForRatio;
+                            actualTraditionalContributionReal = actualContributionRealTotal * traditionalRatio;
+                            actualRothContributionReal = actualContributionRealTotal * (1 - traditionalRatio);
+                        } else {
+                            // If no contributions were planned, but some are needed, put it all in traditional
+                            actualTraditionalContributionReal = actualContributionRealTotal;
+                            actualRothContributionReal = 0;
+                        }
                         
                         // Record the milestone values (the required value)
                         finalCoastValueLocal = requiredCoastPrincipalThisYearReal;
                         yearsToCoastLocal = year;
                         coastAgeLocal = currentAge + 1;
                         
+                        const calculatedEndTraditionalBalanceReal = balanceTraditionalAfterGrowthReal + actualTraditionalContributionReal;
+                        const calculatedEndRothBalanceReal = balanceRothAfterGrowthReal + actualRothContributionReal;
+                        const totalCalculatedEnd = calculatedEndTraditionalBalanceReal + calculatedEndRothBalanceReal;
+
                         // Record Account-specific Coast Balances (proportional split of the REQUIRED principal)
-                        const proportion = calculatedEndTraditionalBalanceReal / totalCalculatedEnd;
+                        const proportion = totalCalculatedEnd > 0 ? calculatedEndTraditionalBalanceReal / totalCalculatedEnd : 0;
                         traditionalCoastBalanceRealGlobal = requiredCoastPrincipalThisYearReal * proportion;
                         rothCoastBalanceRealGlobal = requiredCoastPrincipalThisYearReal * (1 - proportion);
                         
                         rowClass = 'sprint-end-row';
                         coastTag = '🚀 COAST FI!';
+                        
+                        // Update Balances for next iteration
+                        endTraditionalBalanceReal = calculatedEndTraditionalBalanceReal;
+                        endRothBalanceReal = calculatedEndRothBalanceReal;
+                        endBalanceReal = totalCalculatedEnd;
+
+                    } else {
+                         // Update Balances for next iteration (MUST use the FULL calculated amount)
+                        endTraditionalBalanceReal = balanceTraditionalAfterGrowthReal + actualTraditionalContributionReal;
+                        endRothBalanceReal = balanceRothAfterGrowthReal + actualRothContributionReal;
+                        endBalanceReal = endTraditionalBalanceReal + endRothBalanceReal;
                     }
-                    
-                    // Update Balances for next iteration (MUST use the FULL calculated amount)
-                    endTraditionalBalanceReal = calculatedEndTraditionalBalanceReal;
-                    endRothBalanceReal = calculatedEndRothBalanceReal;
-                    endBalanceReal = totalCalculatedEnd;
                     
                     if (isSprinting) {
                         rowClass = 'hover:bg-gray-50'; 
